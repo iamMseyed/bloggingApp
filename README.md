@@ -1,4 +1,4 @@
-<h1>---myBlog---</h1>
+<h1>---Blogging App---</h1>
 
 <strong>
 A Spring Boot web application providing a RESTful API backend for a blogging platform. It handles all core blogging features including:
