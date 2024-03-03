@@ -8,7 +8,7 @@ A Spring Boot web application providing a RESTful API backend for a blogging pla
 - REST API endpoints for CRUD operations
 - Persistent storage of data.
 
-- User registration and login with spirng security
+- User registration and login with spring security
 </strong>
 
 
