@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     private final CustomUserDetailsService customUserDetailsService;
+    //this object has all the details of valid username/password
     public SecurityConfig(CustomUserDetailsService customUserDetailsService){
         this.customUserDetailsService= customUserDetailsService;
     }//constructor injection
@@ -34,42 +35,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected  void configure(HttpSecurity http) throws Exception{
-       //-prev
-      http
+        http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .antMatchers(HttpMethod.POST,"/api/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/**").permitAll() //don't put these under authentication, if any user wants to access, provide them
-// if not to use @EnableGlobalMethodSecurity annotation and @PreAuthorize annotation in controller class
-//                .antMatchers(HttpMethod.POST,"/api/auth/signup").hasRole("ROLE_SUPER") //give signup permission to super-user only.
-//                .antMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
-//                .antMatchers(HttpMethod.POST,"/api/auth/signin").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST,"/api/auth/signin").permitAll()
-//                .antMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
+//                .antMatchers(HttpMethod.POST,"/api/auth/signup").hasRole("SUPER") //remember hasRole() will add ROLE_ by default. So, it will check for ROLE_SUPER in db
+                .antMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/auth/signin").permitAll()
+                .antMatchers(HttpMethod.GET,"/user/getUser/**").hasAuthority("ADMIN") //only ADMIN can have access to these endpoints.
                 .anyRequest()
                 .authenticated()
                 .and()
                 .httpBasic();
-
-        //NEW
-        /*
-        http
-//                .csrf(csrf->csrf.ignoringAntMatchers())
-                .csrf().disable()
-                .authorizeHttpRequests(auth-> auth
-                        //don't put these under authentication, if any user wants to access, provide them
-                        .antMatchers(HttpMethod.POST,"/api/**").permitAll()
-                        .antMatchers(HttpMethod.GET,"/api/**").permitAll()
-                        .antMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
-                        //do signup permission to super-user only
-//                        .antMatchers(HttpMethod.POST,"/api/auth/signup").hasRole("ROLE_SUPER")
-                        .antMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
-                        .antMatchers(HttpMethod.POST,"/api/auth/signin").hasRole("ADMIN")
-//                        .antMatchers(HttpMethod.POST,"/api/auth/signin").permitAll()
-                        .anyRequest().authenticated()) //every other request authenticated, excepted mentioned above
-                .headers(headers-> headers.frameOptions().sameOrigin())
-                .build();
-         */
     }
 
 //    Embedded in-memory authentication method responsible to create object in which username and password is to be stored
@@ -86,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
-        //customUserDetailsService will have data from db, based on username/email and we need to set here, so spring security reads the file and has access to it.
+        //customUserDetailsService will have data from db, based on username/email, and we need to set here, so spring security reads the file and has access to it.
+        
     }
 }

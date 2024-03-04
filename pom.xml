@@ -24,6 +24,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -69,13 +75,21 @@
 			<version>5.7.11</version>
 		</dependency>
 
-<!--		for sms sending -->
+			<!-- SLF4J API -->
 		<dependency>
-			<groupId>com.twilio.sdk</groupId>
-			<artifactId>twilio</artifactId>
-			<version>8.20.0</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+<!--			<version>1.7.32</version> &lt;!&ndash; Use the latest version &ndash;&gt;-->
+		</dependency>
+
+		<!-- Log4j2 Implementation -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+<!--			<version>2.14.1</version>-->
 		</dependency>
 	</dependencies>
+
 
 	<build>
 		<plugins>
