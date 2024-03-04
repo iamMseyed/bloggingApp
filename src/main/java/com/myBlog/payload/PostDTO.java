@@ -8,6 +8,7 @@ import lombok.*;
 
 //same data as that of entity
 public class PostDTO {
+    
     private long id;
     private String title, description, content;
 }

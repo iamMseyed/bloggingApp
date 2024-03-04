@@ -39,8 +39,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .csrf().disable()
                 .authorizeHttpRequests()
 //                .antMatchers(HttpMethod.POST,"/api/auth/signup").hasRole("SUPER") //remember hasRole() will add ROLE_ by default. So, it will check for ROLE_SUPER in db
-                .antMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/auth/signin").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/posts/**").hasAuthority("USER")
+                .antMatchers(HttpMethod.GET,"/api/posts/**").hasAnyAuthority("USER","ADMIN")
+                .antMatchers(HttpMethod.DELETE,"/api/posts/**").hasAnyAuthority("USER","ADMIN")
+                .antMatchers(HttpMethod.PUT,"/api/posts/**").hasAnyAuthority("USER","ADMIN")
                 .antMatchers(HttpMethod.GET,"/user/getUser/**").hasAuthority("ADMIN") //only ADMIN can have access to these endpoints.
                 .anyRequest()
                 .authenticated()

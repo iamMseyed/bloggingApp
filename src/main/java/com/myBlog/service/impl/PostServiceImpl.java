@@ -101,9 +101,32 @@ public class PostServiceImpl implements PostService {
         return dtos;
     }
 
+    @Override
+    public PostDTO updatePost(PostDTO postDTO, long id){
+        Post post = postRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("No data found with the provided id: " + id)
+        );
+//        modelMapper.map(postDTO,post);
+//
+//        Post updatedPost = postRepository.save(post);
+//        PostDTO dto = modelMapper.map(updatedPost,PostDTO.class);
+
+        post.setTitle(postDTO.getTitle());
+        post.setContent(postDTO.getContent());
+        post.setDescription(postDTO.getDescription());
+
+        Post updatedPost = postRepository.save(post);
+
+        PostDTO dto = modelMapper.map(updatedPost,PostDTO.class);
+        return dto;
+    }
+
     //delete a post
     @Override
     public void deletePost(long id) {
+        postRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Not found with id: "+id)
+        );
         postRepository.deleteById(id);
     }
 

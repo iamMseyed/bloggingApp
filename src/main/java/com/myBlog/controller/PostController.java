@@ -18,7 +18,7 @@ public class PostController {
     } //constructor based injection
 
     //create/store post onto database
-    @PostMapping
+    @PostMapping //create post
     public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO){
         //@RB takes json and put in DTO, DTO is used to send back a custom response
         PostDTO dto = postService.createPost(postDTO);
@@ -36,7 +36,7 @@ public class PostController {
  */
 
     //https://localhost:8080/api/posts/particular?id=x //where x is any id you want to search
-    @GetMapping("/particular")
+    @GetMapping("/particular") //get post
     public ResponseEntity<PostDTO> getPostById(@RequestParam long id){
         PostDTO dto = postService.getPostById(id);
         return new ResponseEntity<>(dto,HttpStatus.OK);
@@ -44,7 +44,7 @@ public class PostController {
 
     //get all the posts
     //localhost:8080/api/posts?pageNo=0&pageSize=3&sortBy=title&sortDir=desc //sortDir: sort direction
-    @GetMapping
+    @GetMapping //get all posts
     public List<PostDTO> getAllPosts(
             @RequestParam(name="pageNo",required = false, defaultValue = "0") int pageNo,
             @RequestParam(name="pageSize", required = false, defaultValue = "3") int pageSize,
@@ -59,9 +59,15 @@ public class PostController {
         return postDTOS; //response here is always 200 by default that is why not returning ResponseEntity<>
     }
 
-    //delete post
-    //https://localhost:8080:api/posts/id
-    @DeleteMapping("/{id}")
+    //http://localhost:8080/api/posts/1
+    @PutMapping("/{id}")
+    public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO, @PathVariable long id){
+        PostDTO postDTO1 = postService.updatePost(postDTO, id);
+        return new ResponseEntity<>(postDTO1,HttpStatus.ACCEPTED);
+    }
+
+    //http://localhost:8080/api/posts/id
+    @DeleteMapping("/{id}") //delete post
     public ResponseEntity<String> deletePost(@PathVariable long id){
         postService.deletePost(id);
         return new ResponseEntity<>("Post deleted!",HttpStatus.OK);
